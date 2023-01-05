@@ -129,15 +129,60 @@ print(total_liquido)
 ![image](https://user-images.githubusercontent.com/63296032/210842949-2e9b9848-3aa6-416a-8556-8f03d394b7c6.png)
 * para processar como dataframe, eu vou utilizar o [Pandas](https://pandas.pydata.org)
 ```python
-# Importando a biblioteca do pandas
+# Instalando o Pandas e o Flatten(Flatten é uma operação que transforma uma matriz multidimensional em uma matriz unidimensional)
+!pip install pandas
+!pip install flatten_json
+
+# Importando bibliotecas
+import json
 import pandas as pd
+from pprint import pprint
+from flatten_json import flatten
 
-# Lê o arquivo JSON e armazena os dados em um dataframe
-df = pd.read_json('data.json')
+# Abrindo o arquivo 'data'
+with open("data.json") as file:
+  data = json.load(file)
 
-# Exibe as primeiras linhas do dataframe
+# Exibe o arquivo para análise
+pprint(data)
+
+# Criando e exibindo o Data Frame para ver como o arquivo se comporta 
+df = pd.read_json("data.json")
+
+df.head()
+
+# Podemos ver que a coluna ItemList é uma biblioteca com vários índices, e para expandir e normalizar eles no mesmo dataframe vou utilizar a biblioteca do Flatten
+dict_flatten = (flatten(d) for d in data) #para cada elemento do json, vou chamar o flatten para gerar ele
+
+# Chamando o generator para criar os elementos acima
+dict_flatten
+
+# Transformando o arquivo acima para Data Frame
+df = pd.DataFrame(dict_flatten)
+
+# Exibe o arquivo tratado
 df.head()
 ```
-![image](https://user-images.githubusercontent.com/63296032/210843873-e8856ee0-bc3a-4bf3-aab5-d51e8f5aae11.png)
+![image](https://user-images.githubusercontent.com/63296032/210857858-45b12262-bba8-4380-ad46-507d8ed0320c.png)
 
- 
+ ## Arquitetura de ingestão dos dados de nota fiscal do entregável anterior
+ * Esquema de fluxo de dados:
+
+A API de notas fiscais disponibiliza os dados em formato JSON através de uma URL.
+Um aplicativo ou script em execução em uma máquina virtual ou em um contêiner em um cluster Kubernetes no GCP faz uma solicitação HTTP para a API e recebe os dados em formato JSON.
+O aplicativo ou script transforma os dados em um formato compatível com o BigTable.
+O aplicativo ou script carrega os dados transformados no BigTable através de uma conexão de API do Cloud BigTable.
+
+* Funcionamento:
+
+O aplicativo ou script é executado periodicamente, por exemplo, a cada hora, através de uma tarefa do Cloud Scheduler.
+A tarefa do Cloud Scheduler envia um sinal para o aplicativo ou script para iniciar a ingestão de dados.
+O aplicativo ou script faz uma solicitação HTTP para a API de notas fiscais para obter os dados em formato JSON.
+O aplicativo ou script transforma os dados em um formato compatível com o BigTable, por exemplo, convertendo campos de data para o formato ISO 8601.
+O aplicativo ou script se conecta ao Cloud BigTable através de uma conexão de API e carrega os dados transformados no BigTable.
+
+* Tecnologias do ecossistema GCP:
+
+Cloud BigTable: Armazenamento de dados no formato de tabela.
+Cloud Scheduler: Execução periódica de tarefas.
+Máquina virtual ou cluster Kubernetes: Execução do aplicativo ou script que faz a solicitação HTTP para a API e carrega os dados no BigTable.
