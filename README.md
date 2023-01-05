@@ -166,6 +166,8 @@ df.head()
 ![image](https://user-images.githubusercontent.com/63296032/210857858-45b12262-bba8-4380-ad46-507d8ed0320c.png)
 
  ## Arquitetura de ingestão dos dados de nota fiscal do entregável anterior
+ Uma possível arquitetura de ingestão de dados de nota fiscal utilizando tecnologias da GCP poderia ser a seguinte:
+ 
  * Esquema de fluxo de dados:
 
 A API de notas fiscais disponibiliza os dados em formato JSON através de uma URL.
