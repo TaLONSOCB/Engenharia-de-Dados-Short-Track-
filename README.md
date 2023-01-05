@@ -186,3 +186,4 @@ O aplicativo ou script se conecta ao Cloud BigTable através de uma conexão de 
 Cloud BigTable: Armazenamento de dados no formato de tabela.
 Cloud Scheduler: Execução periódica de tarefas.
 Máquina virtual ou cluster Kubernetes: Execução do aplicativo ou script que faz a solicitação HTTP para a API e carrega os dados no BigTable.
+![image](https://user-images.githubusercontent.com/63296032/210862154-a56ed492-bd46-4a19-baa8-0c9979f92e35.png)
